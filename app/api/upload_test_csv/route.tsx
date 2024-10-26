@@ -1,32 +1,31 @@
+import { NextRequest, NextResponse } from 'next/server';
 import BASE_URL from "@/utils/apiConfig";
-import type { NextApiRequest, NextApiResponse } from "next";
 
-interface UploadTestCSVResponse {
-  message: string;
-  status: string;
-}
+export const POST = async (req: NextRequest) => {
+  const formData = await req.formData();
+  const file = formData.get('file') as Blob;
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<UploadTestCSVResponse | { error: string }>
-) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Only POST requests are allowed." });
-  }
+  // Prepare a new FormData object for sending to the external API
+  const uploadFormData = new FormData();
+  uploadFormData.append('file', file);
 
   try {
-    const formData = new FormData();
-    formData.append("file", req.body.file);
-
+    // Forward the formData to the external API endpoint
     const response = await fetch(`${BASE_URL}/upload_test_csv`, {
-      method: "POST",
-      body: formData,
+      method: 'POST',
+      body: uploadFormData,
     });
 
-    const result = (await response.json()) as UploadTestCSVResponse;
-    res.status(response.status).json(result);
-  } catch (error: any) {
-    console.error("Error in upload_test_csv:", error);
-    res.status(500).json({ error: error.message });
+    // Check if the response from the external API is OK, then return it
+    if (response.ok) {
+      const result = await response.json();
+      return new Response(JSON.stringify(result), { status: 200 })
+    } else {
+      const errorText = await response.text();
+      return NextResponse.json({ error: errorText }, { status: response.status });
+    }
+  } catch (error) {
+    console.error('Failed to upload file:', error);
+    return NextResponse.json({ error: 'Failed to upload file' }, { status: 500 });
   }
-}
+};

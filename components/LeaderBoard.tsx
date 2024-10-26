@@ -1,11 +1,6 @@
 import React from 'react';
 
-interface LeaderboardProps {
-  leaderboardData: any[];
-  bestModel: any;
-}
-
-const Leaderboard: React.FC<LeaderboardProps> = ({ leaderboardData, bestModel }) => {
+const Leaderboard = ({ leaderboardData, bestModel } : any) => {
   return (
     <div className="mt-6 w-full  mx-auto px-2">
       <h2 className="text-xl font-semibold mb-4 text-center">Leaderboard</h2>
