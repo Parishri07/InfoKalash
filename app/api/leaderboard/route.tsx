@@ -1,5 +1,4 @@
 import BASE_URL from "@/utils/apiConfig";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 interface Model {
   logloss: number;
@@ -19,8 +18,7 @@ interface LeaderboardResponse {
   models: Model[];
 }
 
-// Exporting a named export for the GET method
-export async function GET(req: NextApiRequest, res: NextApiResponse<LeaderboardResponse | { error: string }>) {
+export async function GET(req: Request): Promise<Response> {
   try {
     const response = await fetch(`${BASE_URL}/leaderboard`);
     if (!response.ok) {
@@ -28,10 +26,12 @@ export async function GET(req: NextApiRequest, res: NextApiResponse<LeaderboardR
     }
 
     const result: LeaderboardResponse = await response.json();
-    // console.log(result);
     return new Response(JSON.stringify(result), { status: 200 });
-  } catch (error: any) {
-    console.error("Error in leaderboard:", error);
-    return res.status(500).json({ error: error.message });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error in leaderboard:", error);
+      return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    }
+    return new Response(JSON.stringify({ error: "An unknown error occurred" }), { status: 500 });
   }
 }

@@ -1,5 +1,4 @@
 import BASE_URL from "@/utils/apiConfig";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 interface FeatureImportance {
   feature: string;
@@ -13,12 +12,7 @@ interface FeatureImportanceResponse {
   model_type: string;
 }
 
-// Exporting a named export for the GET method
-export async function GET(req: NextApiRequest, res: NextApiResponse<FeatureImportanceResponse | { error: string }>) {
-  if (req.method !== "GET") {
-    return res.status(405).json({ error: "Only GET requests are allowed." });
-  }
-
+export async function GET(req: Request): Promise<Response> {
   try {
     const response = await fetch(`${BASE_URL}/feature_importance`);
     if (!response.ok) {
@@ -27,8 +21,11 @@ export async function GET(req: NextApiRequest, res: NextApiResponse<FeatureImpor
 
     const result: FeatureImportanceResponse = await response.json();
     return new Response(JSON.stringify(result), { status: 200 });
-  } catch (error: any) {
-    console.error("Error in feature_importance:", error);
-    return res.status(500).json({ error: error.message });
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error in feature_importance:", error);
+      return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    }
+    return new Response(JSON.stringify({ error: "An unknown error occurred" }), { status: 500 });
   }
 }
