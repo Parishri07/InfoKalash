@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import FeatureImportance from '@/components/FeatureImportance'; 
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function FeatureImportancePage() {
   const [featureImportanceData, setFeatureImportanceData] = useState<any[]>([]);
@@ -27,17 +29,23 @@ export default function FeatureImportancePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-12">
-      <h1 className="text-2xl font-bold mb-4">Feature Importance Analysis</h1>
-      <button 
-        onClick={handleFeatureImportanceClick} 
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition duration-200"
-        disabled={loadingFeatureImportance}
-      >
-        {loadingFeatureImportance ? 'Loading...' : 'Fetch Feature Importance'}
-      </button>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12">
+      <Card className="max-w-3xl w-full">
+        <CardHeader>
+          <CardTitle className="text-2xl font-bold">Feature Importance Analysis</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button 
+            onClick={handleFeatureImportanceClick} 
+            className="mb-4 w-full"
+            disabled={loadingFeatureImportance}
+          >
+            {loadingFeatureImportance ? 'Loading...' : 'Fetch Feature Importance'}
+          </Button>
 
-      {showFeatureImportance && <FeatureImportance data={featureImportanceData} />}
+          {showFeatureImportance && <FeatureImportance data={featureImportanceData} />}
+        </CardContent>
+      </Card>
     </div>
   );
 }

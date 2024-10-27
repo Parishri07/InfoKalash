@@ -2,6 +2,8 @@
 
 import { useState } from 'react';
 import Leaderboard from '@/components/LeaderBoard';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LeaderboardPage() {
   const [leaderboardData, setLeaderboardData] = useState<any[]>([]);
@@ -20,7 +22,6 @@ export default function LeaderboardPage() {
         return;
       }
       const data = await res.json();
-      console.log(data)
       setLeaderboardData(data.models);
       setBestModel(data.best_model);
       setShowLeaderboard(true);
@@ -33,18 +34,23 @@ export default function LeaderboardPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-12">
-      <h1 className="text-4xl font-bold mb-6">Model Leaderboard</h1>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12">
+      <Card className="max-w-3xl w-full">
+        <CardHeader>
+          <CardTitle className="text-4xl font-bold">Model Leaderboard</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Button
+            onClick={handleGetLeaderboard}
+            className="w-full mb-6"
+            disabled={loadingLeaderboard}
+          >
+            {loadingLeaderboard ? 'Fetching Leaderboard...' : 'Show Leaderboard'}
+          </Button>
 
-      <button
-        onClick={handleGetLeaderboard}
-        className="bg-indigo-500 text-white px-4 py-2 rounded mb-6"
-        disabled={loadingLeaderboard}
-      >
-        {loadingLeaderboard ? 'Fetching Leaderboard...' : 'Show Leaderboard'}
-      </button>
-
-      {showLeaderboard && <Leaderboard leaderboardData={leaderboardData} bestModel={bestModel} />}
+          {showLeaderboard && <Leaderboard leaderboardData={leaderboardData} bestModel={bestModel} />}
+        </CardContent>
+      </Card>
     </div>
   );
 }

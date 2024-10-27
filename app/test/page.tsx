@@ -1,6 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert } from "@/components/ui/alert";
 
 export default function TestPage() {
   const [testFile, setTestFile] = useState<File | null>(null);
@@ -54,26 +57,31 @@ export default function TestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-12">
-      <h1 className="text-4xl font-bold mb-6">Upload Test CSV</h1>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center py-12">
+      <Card className="max-w-3xl w-full">
+        <CardHeader>
+          <CardTitle className="text-4xl font-bold">Upload Test CSV</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {error && <Alert variant="destructive">{error}</Alert>}
 
-      {error && <p className="text-red-500">{error}</p>}
+          <div className="mb-6">
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleTestFileUpload}
+              className="border rounded p-2 w-full"
+            />
+          </div>
 
-      <div className="mb-6">
-        <input
-          type="file"
-          accept=".csv"
-          onChange={handleTestFileUpload}
-          className="border rounded p-2"
-        />
-      </div>
-
-      <button
-        onClick={handleTestFileSubmit}
-        className="bg-green-500 text-white px-4 py-2 rounded mb-6"
-      >
-        Upload Test CSV & Download Results
-      </button>
+          <Button
+            onClick={handleTestFileSubmit}
+            className="bg-green-500 text-white w-full"
+          >
+            Upload Test CSV & Download Results
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }
