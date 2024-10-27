@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import React from 'react';
 
 const Home = () => {
@@ -30,7 +29,6 @@ const Home = () => {
             </div>
 
             {/* Upload Button */}
-            <Link href={'/upload'}>
             <button 
               className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl px-8 py-4 w-full font-medium text-lg 
                          hover:from-purple-600 hover:to-purple-700 transform hover:-translate-y-1 transition-all duration-300
@@ -43,7 +41,6 @@ const Home = () => {
                 Upload Dataset
               </div>
             </button>
-            </Link>
 
             {/* Stats Container */}
             <div className="grid grid-cols-2 gap-4">
