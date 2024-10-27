@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Upload, CheckCircle, AlertCircle } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,17 +9,19 @@ import { Progress } from "@/components/ui/progress";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-export default function UploadPage() {
-  const [file, setFile] = useState(null);
-  const [columns, setColumns] = useState([]);
-  const [targetColumn, setTargetColumn] = useState('');
-  const [selectedColumns, setSelectedColumns] = useState([]);
-  const [previewData, setPreviewData] = useState([]);
-  const [error, setError] = useState(null);
-  const [isTraining, setIsTraining] = useState(false);
-  const [trainingComplete, setTrainingComplete] = useState(false);
+interface UploadPageProps {}
 
-  const handleFileUpload = (event) => {
+const UploadPage: React.FC<UploadPageProps> = () => {
+  const [file, setFile] = useState<File | null>(null);
+  const [columns, setColumns] = useState<string[]>([]);
+  const [targetColumn, setTargetColumn] = useState<string>('');
+  const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
+  const [previewData, setPreviewData] = useState<string[][]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isTraining, setIsTraining] = useState<boolean>(false);
+  const [trainingComplete, setTrainingComplete] = useState<boolean>(false);
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       if (uploadedFile.type !== 'text/csv') {
@@ -32,10 +34,10 @@ export default function UploadPage() {
     }
   };
 
-  const parseCSV = async (file) => {
+  const parseCSV = async (file: File): Promise<void> => {
     const reader = new FileReader();
     reader.onload = async (e) => {
-      const text = e.target?.result;
+      const text = e.target?.result as string;
       const lines = text.split('\n').map(line => line.split(',').map(col => col.trim()));
       const firstLine = lines[0];
       setColumns(firstLine);
@@ -44,13 +46,13 @@ export default function UploadPage() {
     reader.readAsText(file);
   };
 
-  const handleColumnSelection = (col) => {
+  const handleColumnSelection = (col: string): void => {
     setSelectedColumns((prev) =>
       prev.includes(col) ? prev.filter((c) => c !== col) : [...prev, col]
     );
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (): Promise<void> => {
     if (!file || !targetColumn || selectedColumns.length === 0) {
       setError('Please select a file, target column, and feature columns');
       return;
@@ -76,7 +78,7 @@ export default function UploadPage() {
     }
   };
 
-  const pollTrainingStatus = () => {
+  const pollTrainingStatus = (): void => {
     const interval = setInterval(async () => {
       try {
         const res = await fetch('/api/training_status');
@@ -180,7 +182,7 @@ export default function UploadPage() {
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead>
                     <tr className="bg-slate-50">
-                      {previewData[0].map((col:any, idx:any) => (
+                      {previewData[0].map((col: string, idx: number) => (
                         <th key={idx} className="border-b px-4 py-2 text-left text-sm font-medium">
                           {col}
                         </th>
@@ -230,4 +232,6 @@ export default function UploadPage() {
       </div>
     </div>
   );
-}
+};
+
+export default UploadPage;

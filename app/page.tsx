@@ -34,7 +34,7 @@ const Home = () => {
             <button 
               className="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-xl px-8 py-4 w-full font-medium text-lg 
                          hover:from-purple-600 hover:to-purple-700 transform hover:-translate-y-1 transition-all duration-300
-                         shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30"
+                         shadow-lg shadow-purple-500/20 hover:shadow-purple-500/30 mt-4"
             >
               <div className="flex items-center justify-center gap-3">
                 <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

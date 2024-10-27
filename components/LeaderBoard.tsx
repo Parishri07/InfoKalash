@@ -2,7 +2,22 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table } from "@/components/ui/table";
 
-const Leaderboard = ({ leaderboardData, bestModel }: any) => {
+// Define the type for a model in the leaderboard
+interface LeaderboardModel {
+  model_id: string;
+  logloss: number;
+  mse: number;
+  rmse: number;
+  algorithm?: string; // Optional if not always present
+}
+
+// Define the props for the Leaderboard component
+interface LeaderboardProps {
+  leaderboardData: LeaderboardModel[];
+  bestModel?: LeaderboardModel; // Optional bestModel prop
+}
+
+const Leaderboard: React.FC<LeaderboardProps> = ({ leaderboardData, bestModel }) => {
   return (
     <div className="mt-6">
       <Card>
